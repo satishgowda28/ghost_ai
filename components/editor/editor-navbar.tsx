@@ -16,6 +16,8 @@ export function EditorNavbar({ isOpen, onToggle }: EditorNavbarProps) {
           variant="ghost"
           size="icon"
           onClick={onToggle}
+          aria-label={isOpen ? "Close panel" : "Open panel"}
+          aria-expanded={isOpen}
           className="h-8 w-8 text-copy-muted hover:text-copy-primary"
         >
           {isOpen ? (

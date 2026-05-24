@@ -1,28 +1,27 @@
 # Editor
 
-We need the base chrome components that frame every editor screen - the top navbasr and the left sidebar shell. These will be reused and extended in every chapter that follows.
+We need the base chrome components that frame every editor screen - the top navbar and the left sidebar shell. These will be reused and extended in every chapter that follows.
 
-### Editor Navbar
+## Editor Navbar
 
 Create `components/editor/editor-navbar.tsx`.
 
 **Requirements**:
 
 - fixed-height top navbar
-- left section containes sidebar toggle button
-- left section contains sidebat toggle button
+- left section contains sidebar toggle button
 - use `PanelLeftOpen` / `PanelLeftClose` icons based on sidebar state
 - right section stays empty for now
 - dark background with subtle bottom border
 
-### Project Sidebar
+## Project Sidebar
 
 Create `components/editor/project-sidebar.tsx`.
 
 **Requirements**:
 
 - sidebar should float above the editor canvas
-- opening it should not psuh page content
+- opening it should not push page content
 - slides in from the left
 - accepts `isOpen` prop
 - header with `Projects` title + close button
@@ -32,7 +31,7 @@ Create `components/editor/project-sidebar.tsx`.
 - both tabs show empty placeholder state
 - full-width `New Project` button at the bottom with `Plus` icon
 
-### Dialog Pattern
+## Dialog Pattern
 
 use the existing color tokens from `global.css` for dialog styling.
 
@@ -44,8 +43,8 @@ use the existing color tokens from `global.css` for dialog styling.
 
 Do not build actual dialog yet.
 
-### Check when done
+## Check when done
 
-- new compoents complie without TS errors
+- new components compile without TS errors
 - no lint errors
 - dialog pattern is ready for future use.
