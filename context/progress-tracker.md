@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 02 complete — Editor Chrome
+- Feature 03 complete — Authentication
 
 ## Current Goal
 
@@ -14,10 +14,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - **01-design-system**: shadcn/ui initialized (Tailwind v4), components/ui/{button,card,dialog,input,tabs,textarea,scroll-area}.tsx added, lucide-react installed, lib/utils.ts cn() helper created, globals.css dark theme applied with project design tokens.
 - **02-editor**: Editor chrome shell components added. `components/editor/editor-navbar.tsx` — fixed top navbar with PanelLeftOpen/PanelLeftClose toggle. `components/editor/project-sidebar.tsx` — floating overlay sidebar with Tabs (My Projects / Shared), empty placeholder states, New Project button. Dialog pattern: existing `components/ui/dialog.tsx` (shadcn) uses project color tokens via globals.css — ready for future use.
+- **03-auth**: Clerk wired end-to-end. `proxy.ts` provides route protection via `clerkMiddleware` (Next.js 16 convention). `ClerkProvider` in root layout with dark appearance using CSS variable references. `/` redirects authenticated → `/editor`, unauthenticated → `/sign-in`. Sign-in and sign-up pages use two-panel layout (left: logo/tagline/feature list, hidden on mobile; right: Clerk form). `UserButton` added to editor navbar right section. `@clerk/ui` installed.
 
 ## In Progress
 
-- None yet.
+- None.
 
 ## Next Up
 
@@ -33,6 +34,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - globals.css is single source of truth: project tokens (--bg-base, --text-primary, etc.) mapped to Tailwind utilities (bg-base, text-copy-primary, etc.) via @theme inline.
 - Dark-only: all shadcn semantic tokens wired to dark values in :root; `dark` class added to `<html>` so dark: variants activate.
 - Do not modify components/ui/* — protected foundation per ai-workflow-rules.md.
+- Next.js 16: middleware renamed to `proxy.ts` (not `middleware.ts`). Clerk's `clerkMiddleware` default export is compatible with Next.js 16 proxy convention.
+- Clerk appearance themed via CSS variable references (`var(--bg-base)` etc.) in `ClerkProvider` `appearance.variables` — no hardcoded colors, no `@clerk/themes` dependency needed.
 
 ## Session Notes
 
