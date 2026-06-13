@@ -19,7 +19,7 @@ Keep the layout minimal and professional.
 
 ## Implementation
 
-In the root layout `ClerkProvider` is used make it dark using clerks dark theme
+In the root layout `ClerkProvider` is used make it dark using clerks `dark` theme
 
 Define Public routes using the existing sign-in and sign-up env vars. Prtect everthing else by default.
 
