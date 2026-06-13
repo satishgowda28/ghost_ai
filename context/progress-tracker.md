@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 04 complete — Project Dialogs
+- Feature 05 in progress — Prisma data model + client
 
 ## Current Goal
 
@@ -16,6 +16,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - **02-editor**: Editor chrome shell components added. `components/editor/editor-navbar.tsx` — fixed top navbar with PanelLeftOpen/PanelLeftClose toggle. `components/editor/project-sidebar.tsx` — floating overlay sidebar with Tabs (My Projects / Shared), empty placeholder states, New Project button. Dialog pattern: existing `components/ui/dialog.tsx` (shadcn) uses project color tokens via globals.css — ready for future use.
 - **03-auth**: Clerk wired end-to-end. `proxy.ts` provides route protection via `clerkMiddleware` (Next.js 16 convention). `ClerkProvider` in root layout with dark appearance using CSS variable references. `/` redirects authenticated → `/editor`, unauthenticated → `/sign-in`. Sign-in and sign-up pages use two-panel layout (left: logo/tagline/feature list, hidden on mobile; right: Clerk form). `UserButton` added to editor navbar right section. `@clerk/ui` installed.
 - **04-project-dialogs**: Editor home screen added to `/editor` page — centered heading, description, and New Project button. Three dialogs implemented: Create (live slug preview), Rename (prefilled input, auto-focus, Enter submits), Delete (destructive confirm). Dedicated hook `hooks/use-project-dialogs.ts` manages dialog/form/loading state. `EditorActionsContext` bridges layout→page boundary for New Project button wiring. Sidebar updated with mock project list (`lib/mock-projects.ts`) — owned projects show rename/delete actions, shared tab shows projects without actions. Mobile backdrop scrim added to sidebar. All wired: editor home New Project → create, sidebar New Project → create, sidebar rename/delete → respective dialogs. No API calls — mock data only. TypeScript clean, lint clean.
+- **05-prisma**: `prisma/models/project.prisma` — `Project` and `ProjectCollaborator` models with enum, relations, cascade delete, unique constraint, and indexes. `lib/prisma.ts` — cached singleton; branches on `DATABASE_URL`: `prisma+postgres://` → Accelerate path (requires `@prisma/extension-accelerate`); otherwise `@prisma/adapter-pg`. Client generated to `app/generated/prisma/`. `npm run build` passes. Migration not applied — run `npx prisma migrate dev --name init` in terminal.
 
 ## In Progress
 
