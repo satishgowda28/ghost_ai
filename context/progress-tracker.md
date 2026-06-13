@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 03 complete — Authentication
+- Feature 04 complete — Project Dialogs
 
 ## Current Goal
 
@@ -15,6 +15,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - **01-design-system**: shadcn/ui initialized (Tailwind v4), components/ui/{button,card,dialog,input,tabs,textarea,scroll-area}.tsx added, lucide-react installed, lib/utils.ts cn() helper created, globals.css dark theme applied with project design tokens.
 - **02-editor**: Editor chrome shell components added. `components/editor/editor-navbar.tsx` — fixed top navbar with PanelLeftOpen/PanelLeftClose toggle. `components/editor/project-sidebar.tsx` — floating overlay sidebar with Tabs (My Projects / Shared), empty placeholder states, New Project button. Dialog pattern: existing `components/ui/dialog.tsx` (shadcn) uses project color tokens via globals.css — ready for future use.
 - **03-auth**: Clerk wired end-to-end. `proxy.ts` provides route protection via `clerkMiddleware` (Next.js 16 convention). `ClerkProvider` in root layout with dark appearance using CSS variable references. `/` redirects authenticated → `/editor`, unauthenticated → `/sign-in`. Sign-in and sign-up pages use two-panel layout (left: logo/tagline/feature list, hidden on mobile; right: Clerk form). `UserButton` added to editor navbar right section. `@clerk/ui` installed.
+- **04-project-dialogs**: Editor home screen added to `/editor` page — centered heading, description, and New Project button. Three dialogs implemented: Create (live slug preview), Rename (prefilled input, auto-focus, Enter submits), Delete (destructive confirm). Dedicated hook `hooks/use-project-dialogs.ts` manages dialog/form/loading state. `EditorActionsContext` bridges layout→page boundary for New Project button wiring. Sidebar updated with mock project list (`lib/mock-projects.ts`) — owned projects show rename/delete actions, shared tab shows projects without actions. Mobile backdrop scrim added to sidebar. All wired: editor home New Project → create, sidebar New Project → create, sidebar rename/delete → respective dialogs. No API calls — mock data only. TypeScript clean, lint clean.
 
 ## In Progress
 

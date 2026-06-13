@@ -33,7 +33,7 @@ Create `components/editor/project-sidebar.tsx`.
 
 ## Dialog Pattern
 
-use the existing color tokens from `global.css` for dialog styling.
+use the existing color tokens from `globals.css` for dialog styling.
 
 **Support:**
 
