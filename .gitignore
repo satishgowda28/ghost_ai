@@ -42,6 +42,6 @@ next-env.d.ts
 
 /app/generated/prisma
 
-/.calude
-/.agents
+.claude/
+.agents/
 
