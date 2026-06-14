@@ -48,7 +48,7 @@
   --destructive: #ff4d4f;
   --border: #2a2a30;
   --input: #2a2a30;
-  --ring: #00c8d4;
+  --ring: #3a3a42;
   --sidebar: #111114;
   --sidebar-foreground: #f0f0f4;
   --sidebar-primary: #00c8d4;
@@ -56,7 +56,7 @@
   --sidebar-accent: #1e1e23;
   --sidebar-accent-foreground: #c0c0cc;
   --sidebar-border: #2a2a30;
-  --sidebar-ring: #00c8d4;
+  --sidebar-ring: #3a3a42;
 }
 
 @theme inline {
@@ -130,5 +130,9 @@
   }
   html {
     @apply font-sans;
+  }
+  input,
+  textarea {
+    @apply text-copy-primary;
   }
 }

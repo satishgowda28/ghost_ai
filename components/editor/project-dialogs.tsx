@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { Project } from "@/lib/mock-projects";
+import type { ProjectData } from "@/types/project";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -18,6 +18,7 @@ interface CreateProjectDialogProps {
   slugPreview: string;
   onNameChange: (name: string) => void;
   onSubmit: () => void;
+  isLoading?: boolean;
 }
 
 export function CreateProjectDialog({
@@ -27,6 +28,7 @@ export function CreateProjectDialog({
   slugPreview,
   onNameChange,
   onSubmit,
+  isLoading,
 }: CreateProjectDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
@@ -59,15 +61,15 @@ export function CreateProjectDialog({
           </div>
           {slugPreview && (
             <p className="text-xs text-copy-faint font-mono">
-              slug: {slugPreview}
+              room: {slugPreview}
             </p>
           )}
           <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!nameValue.trim()}>
-              Create
+            <Button type="submit" disabled={!nameValue.trim() || isLoading}>
+              {isLoading ? "Creating…" : "Create"}
             </Button>
           </div>
         </form>
@@ -79,10 +81,11 @@ export function CreateProjectDialog({
 interface RenameProjectDialogProps {
   open: boolean;
   onClose: () => void;
-  project: Project | null;
+  project: ProjectData | null;
   nameValue: string;
   onNameChange: (name: string) => void;
   onSubmit: () => void;
+  isLoading?: boolean;
 }
 
 export function RenameProjectDialog({
@@ -92,6 +95,7 @@ export function RenameProjectDialog({
   nameValue,
   onNameChange,
   onSubmit,
+  isLoading,
 }: RenameProjectDialogProps) {
   if (!project) return null;
 
@@ -124,11 +128,11 @@ export function RenameProjectDialog({
             />
           </div>
           <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!nameValue.trim()}>
-              Rename
+            <Button type="submit" disabled={!nameValue.trim() || isLoading}>
+              {isLoading ? "Renaming…" : "Rename"}
             </Button>
           </div>
         </form>
@@ -140,8 +144,9 @@ export function RenameProjectDialog({
 interface DeleteProjectDialogProps {
   open: boolean;
   onClose: () => void;
-  project: Project | null;
+  project: ProjectData | null;
   onConfirm: () => void;
+  isLoading?: boolean;
 }
 
 export function DeleteProjectDialog({
@@ -149,6 +154,7 @@ export function DeleteProjectDialog({
   onClose,
   project,
   onConfirm,
+  isLoading,
 }: DeleteProjectDialogProps) {
   if (!project) return null;
 
@@ -165,11 +171,11 @@ export function DeleteProjectDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2 pt-1">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
-            Delete
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading}>
+            {isLoading ? "Deleting…" : "Delete"}
           </Button>
         </div>
       </DialogContent>

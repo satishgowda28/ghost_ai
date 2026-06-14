@@ -1,6 +1,6 @@
 "use client";
 
-import { useProjectDialogs } from "@/hooks/use-project-dialogs";
+import { useProjectActions } from "@/hooks/use-project-actions";
 import { useState } from "react";
 import { EditorActionsContext } from "./dialogs-context";
 import { EditorNavbar } from "./editor-navbar";
@@ -10,14 +10,21 @@ import {
   RenameProjectDialog,
 } from "./project-dialogs";
 import { ProjectSidebar } from "./project-sidebar";
+import type { ProjectData } from "@/types/project";
 
 interface EditorShellProps {
   children: React.ReactNode;
+  ownedProjects: ProjectData[];
+  sharedProjects: ProjectData[];
 }
 
-export function EditorShell({ children }: EditorShellProps) {
+export function EditorShell({
+  children,
+  ownedProjects,
+  sharedProjects,
+}: EditorShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const dialogs = useProjectDialogs();
+  const dialogs = useProjectActions();
 
   return (
     <EditorActionsContext.Provider value={{ openCreate: dialogs.openCreate }}>
@@ -32,6 +39,8 @@ export function EditorShell({ children }: EditorShellProps) {
           onOpenCreate={dialogs.openCreate}
           onOpenRename={dialogs.openRename}
           onOpenDelete={dialogs.openDelete}
+          ownedProjects={ownedProjects}
+          sharedProjects={sharedProjects}
         />
         <main className="h-[calc(100vh-3rem)] mt-12">{children}</main>
         <CreateProjectDialog
@@ -41,6 +50,7 @@ export function EditorShell({ children }: EditorShellProps) {
           slugPreview={dialogs.slugPreview}
           onNameChange={dialogs.setName}
           onSubmit={dialogs.submitCreate}
+          isLoading={dialogs.isLoading}
         />
         <RenameProjectDialog
           open={dialogs.activeDialog === "rename"}
@@ -49,12 +59,14 @@ export function EditorShell({ children }: EditorShellProps) {
           nameValue={dialogs.nameValue}
           onNameChange={dialogs.setName}
           onSubmit={dialogs.submitRename}
+          isLoading={dialogs.isLoading}
         />
         <DeleteProjectDialog
           open={dialogs.activeDialog === "delete"}
           onClose={dialogs.closeDialog}
           project={dialogs.targetProject}
           onConfirm={dialogs.submitDelete}
+          isLoading={dialogs.isLoading}
         />
       </div>
     </EditorActionsContext.Provider>
