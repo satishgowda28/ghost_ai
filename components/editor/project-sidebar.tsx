@@ -1,33 +1,36 @@
 "use client";
 
+import Link from "next/link";
 import { X, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MOCK_PROJECTS, type Project } from "@/lib/mock-projects";
+import type { ProjectData } from "@/types/project";
 
 interface ProjectSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenCreate: () => void;
-  onOpenRename: (project: Project) => void;
-  onOpenDelete: (project: Project) => void;
+  onOpenRename: (project: ProjectData) => void;
+  onOpenDelete: (project: ProjectData) => void;
+  ownedProjects: ProjectData[];
+  sharedProjects: ProjectData[];
 }
-
-const ownedProjects = MOCK_PROJECTS.filter((p) => p.isOwned);
-const sharedProjects = MOCK_PROJECTS.filter((p) => !p.isOwned);
 
 function ProjectItem({
   project,
   onRename,
   onDelete,
 }: {
-  project: Project;
-  onRename?: (project: Project) => void;
-  onDelete?: (project: Project) => void;
+  project: ProjectData;
+  onRename?: (project: ProjectData) => void;
+  onDelete?: (project: ProjectData) => void;
 }) {
   return (
-    <div className="flex items-center gap-1 px-2 py-2 mx-2 rounded-xl hover:bg-elevated cursor-pointer">
+    <Link
+      href={`/editor/${project.id}`}
+      className="flex items-center gap-1 px-2 py-2 mx-2 rounded-xl hover:bg-elevated cursor-pointer"
+    >
       <span className="flex-1 text-sm text-copy-primary truncate">
         {project.name}
       </span>
@@ -55,7 +58,7 @@ function ProjectItem({
           </button>
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
@@ -65,6 +68,8 @@ export function ProjectSidebar({
   onOpenCreate,
   onOpenRename,
   onOpenDelete,
+  ownedProjects,
+  sharedProjects,
 }: ProjectSidebarProps) {
   return (
     <>
