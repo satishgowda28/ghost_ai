@@ -94,6 +94,7 @@ export function useProjectActions(): UseProjectActionsReturn {
       const project: { id: string } = await res.json();
       closeDialog();
       router.push(`/editor/${project.id}`);
+      router.refresh();
     } finally {
       setIsLoading(false);
     }

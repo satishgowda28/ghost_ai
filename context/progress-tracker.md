@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 07 complete — Editor home and sidebar wired to real project API
+- Feature 09 complete — Share dialog with collaborator management
 
 ## Completed
 
@@ -15,6 +15,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - **05-prisma**: `prisma/models/project.prisma` — `Project` and `ProjectCollaborator` models with enum, relations, cascade delete, unique constraint, and indexes. `lib/prisma.ts` — cached singleton; branches on `DATABASE_URL`: `prisma+postgres://` → Accelerate path; otherwise `@prisma/adapter-pg`. Client generated to `app/generated/prisma/`. `@prisma/extension-accelerate` installed. Migration not applied — run `npx prisma migrate dev --name init` in terminal.
 - **06-project-apis**: `app/api/projects/route.ts` — GET (list owner's projects, desc by createdAt) and POST (create, default name `Untitled Project`). `app/api/projects/[projectId]/route.ts` — PATCH (rename, 400 on empty name) and DELETE. All handlers: explicit 401 on no userId, 404 when project missing, 403 when requester is not owner. Owner-only mutations (no collaborator check per spec). `npm run build` passes.
 - **07-wire-editor-home**: Editor home and sidebar wired to real API. `types/project.ts` — shared `ProjectData` interface (id, name). `lib/projects.ts` — `getOwnedProjects(userId)` and `getSharedProjects(userEmail)` helpers used by layout and GET route. `app/editor/layout.tsx` — async RSC; fetches owned + shared projects server-side via Clerk auth/currentUser, passes both lists to `EditorShell`. `app/editor/page.tsx` — converted to RSC; New Project button extracted to `components/editor/new-project-button.tsx` (client). `hooks/use-project-actions.ts` — replaces old mock hook; manages dialog state + real API mutations: POST create (id = slugify(name)+suffix, navigates to `/editor/[id]`), PATCH rename (router.refresh), DELETE (redirect to /editor if active workspace, else refresh). `app/api/projects/route.ts` — POST now accepts `{ name, suffix }`, computes id = `${slug}-${suffix}`, handles P2002 conflict with 409. `components/editor/project-sidebar.tsx` — accepts `ownedProjects`/`sharedProjects` props, no mock data. Dialogs updated to `ProjectData` type + `isLoading` prop + "room:" label in create dialog. `lib/mock-projects.ts` and `hooks/use-project-dialogs.ts` deleted. `npm run build` passes.
+- **08-editor-workspace**: Workspace shell at `/editor/[roomId]` with server-side access control. `lib/project-access.ts` — `getUserIdentity()` (userId + primaryEmail via Clerk) and `checkProjectAccess(projectId, userId, email)` (owner or collaborator check). `components/editor/access-denied.tsx` — centered lock icon, message, link back to `/editor`; shown for missing or unauthorized projects. `app/editor/[roomId]/page.tsx` — async RSC; awaits params (Next.js 16 Promise params), calls getUserIdentity + checkProjectAccess, redirects unauthenticated users to `/sign-in`, renders AccessDenied for no-access, renders WorkspaceShell for authorized users. `components/editor/workspace-shell.tsx` — client component; sub-navbar with project name + Share button + AI sidebar toggle; canvas placeholder (dark bg, centered message); right AI sidebar placeholder (slide-over on toggle). `components/editor/project-sidebar.tsx` — updated to use `usePathname` and highlight active room with `bg-elevated`. `npm run build` passes.
+- **09-shared-dialog**: Share dialog wired to Share button in editor workspace. `checkProjectAccess` extended to return `isOwner` flag. `lib/clerk-users.ts` — `enrichEmailsWithClerk(emails[])` does one batch `getUserList` call and maps results to `{ displayName, avatarUrl }` with graceful fallback to email. `app/api/projects/[projectId]/collaborators/route.ts` — GET (list, enriched with Clerk; accessible to owner or collaborator) and POST (invite by email, owner-only, normalized lowercase, rejects owner-self-invite, 409 on duplicate). `app/api/projects/[projectId]/collaborators/[collaboratorId]/route.ts` — DELETE (owner-only, verifies collaborator belongs to project by cuid). `components/editor/share-dialog.tsx` — Dialog with avatar + display name, owner view: invite form + remove button + copy-link; collaborator view: read-only list. `components/editor/workspace-shell.tsx` — Share button opens dialog, passes projectId/isOwner. `app/editor/[roomId]/page.tsx` — passes projectId and isOwner to WorkspaceShell. `npm run build` passes.
 
 ## In Progress
 
@@ -22,7 +24,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Next Up
 
-- Feature 08: Canvas workspace (`/editor/[projectId]`) — Liveblocks room setup, React Flow canvas.
+- Feature 10: Canvas workspace — Liveblocks room setup, React Flow canvas.
 
 ## Open Questions
 
