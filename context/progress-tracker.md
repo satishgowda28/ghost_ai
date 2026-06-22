@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 09 complete — Share dialog with collaborator management
+- Feature 11 complete — Liveblocks-backed React Flow canvas
 
 ## Completed
 
@@ -18,13 +18,17 @@ Update this file whenever the current phase, active feature, or implementation s
 - **08-editor-workspace**: Workspace shell at `/editor/[roomId]` with server-side access control. `lib/project-access.ts` — `getUserIdentity()` (userId + primaryEmail via Clerk) and `checkProjectAccess(projectId, userId, email)` (owner or collaborator check). `components/editor/access-denied.tsx` — centered lock icon, message, link back to `/editor`; shown for missing or unauthorized projects. `app/editor/[roomId]/page.tsx` — async RSC; awaits params (Next.js 16 Promise params), calls getUserIdentity + checkProjectAccess, redirects unauthenticated users to `/sign-in`, renders AccessDenied for no-access, renders WorkspaceShell for authorized users. `components/editor/workspace-shell.tsx` — client component; sub-navbar with project name + Share button + AI sidebar toggle; canvas placeholder (dark bg, centered message); right AI sidebar placeholder (slide-over on toggle). `components/editor/project-sidebar.tsx` — updated to use `usePathname` and highlight active room with `bg-elevated`. `npm run build` passes.
 - **09-shared-dialog**: Share dialog wired to Share button in editor workspace. `checkProjectAccess` extended to return `isOwner` flag. `lib/clerk-users.ts` — `enrichEmailsWithClerk(emails[])` does one batch `getUserList` call and maps results to `{ displayName, avatarUrl }` with graceful fallback to email. `app/api/projects/[projectId]/collaborators/route.ts` — GET (list, enriched with Clerk; accessible to owner or collaborator) and POST (invite by email, owner-only, normalized lowercase, rejects owner-self-invite, 409 on duplicate). `app/api/projects/[projectId]/collaborators/[collaboratorId]/route.ts` — DELETE (owner-only, verifies collaborator belongs to project by cuid). `components/editor/share-dialog.tsx` — Dialog with avatar + display name, owner view: invite form + remove button + copy-link; collaborator view: read-only list. `components/editor/workspace-shell.tsx` — Share button opens dialog, passes projectId/isOwner. `app/editor/[roomId]/page.tsx` — passes projectId and isOwner to WorkspaceShell. `npm run build` passes.
 
+- **10-liveblocks-setup**: Liveblocks realtime collaboration infrastructure. `liveblocks.config.ts` — typed `Presence` (cursor x/y + `isThinking` boolean) and `UserMeta` (id + info: name/avatar/color). `@liveblocks/node@^3.20.0` installed. `lib/liveblocks.ts` — lazy cached `Liveblocks` node client (`getLiveblocksClient()`); `getCursorColor(userId)` deterministically maps userId to one of 8 palette colors via hash. `app/api/liveblocks-auth/route.ts` — `POST /api/liveblocks-auth`: requires Clerk auth (401 on miss), body `{ projectId }` (400 on miss), `checkProjectAccess` gate (403 on fail), `getOrCreateRoom` for idempotent room creation, `prepareSession` with `FULL_ACCESS` and user name/avatar/color from Clerk. `npm run build` passes.
+
+- **11-base-canvas**: Liveblocks-backed React Flow canvas. `types/canvas.ts` — `CanvasNodeData` (label/color/shape), `CanvasNode` (type: "canvasNode"), `CanvasEdge` (type: "canvasEdge"). `components/editor/canvas-wrapper.tsx` — client component; `LiveblocksProvider` with custom `authEndpoint` POST to `/api/liveblocks-auth`; `RoomProvider` with `initialPresence { cursor: null, isThinking: false }`; `ClientSideSuspense` loading fallback; `ErrorBoundary` error fallback. `components/editor/canvas.tsx` — `useLiveblocksFlow<CanvasNode, CanvasEdge>({ suspense: true })`; `ReactFlow` with synced nodes/edges/handlers; `Background` (dots), `MiniMap`, `ConnectionMode.Loose`, `fitView`. `workspace-shell.tsx` — canvas placeholder replaced with `<CanvasWrapper roomId={projectId} />`. `npm run build` passes.
+
 ## In Progress
 
 - None.
 
 ## Next Up
 
-- Feature 10: Canvas workspace — Liveblocks room setup, React Flow canvas.
+- Feature 12: Custom node and edge rendering.
 
 ## Open Questions
 
