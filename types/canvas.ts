@@ -29,4 +29,4 @@ export type CanvasNodeData = {
 };
 
 export type CanvasNode = Node<CanvasNodeData, "canvasNode">;
-export type CanvasEdge = Edge<Record<string, never>, "canvasEdge">;
+export type CanvasEdge = Edge<{ label?: string }, "canvasEdge">;

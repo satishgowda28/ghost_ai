@@ -97,13 +97,21 @@ function getTextColor(fill?: string): string {
 const handleCls =
   "!opacity-0 group-hover:!opacity-100 !transition-opacity !duration-150";
 
+const handleStyle: React.CSSProperties = {
+  width: 8,
+  height: 8,
+  background: "#ffffff",
+  border: "1.5px solid rgba(0,0,0,0.55)",
+  borderRadius: "50%",
+};
+
 function Handles() {
   return (
     <>
-      <Handle type="target" position={Position.Top} className={handleCls} />
-      <Handle type="source" position={Position.Bottom} className={handleCls} />
-      <Handle type="target" position={Position.Left} className={handleCls} />
-      <Handle type="source" position={Position.Right} className={handleCls} />
+      <Handle type="source" position={Position.Top} id="top" className={handleCls} style={handleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" className={handleCls} style={handleStyle} />
+      <Handle type="source" position={Position.Left} id="left" className={handleCls} style={handleStyle} />
+      <Handle type="source" position={Position.Right} id="right" className={handleCls} style={handleStyle} />
     </>
   );
 }

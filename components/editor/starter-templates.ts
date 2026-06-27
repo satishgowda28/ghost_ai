@@ -32,7 +32,7 @@ function n(
 }
 
 function e(id: string, source: string, target: string): CanvasEdge {
-  return { id, source, target } as CanvasEdge;
+  return { id, source, target, type: "canvasEdge", data: {} } as CanvasEdge;
 }
 
 export const CANVAS_TEMPLATES: CanvasTemplate[] = [
