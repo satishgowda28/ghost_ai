@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Share2, BrainCircuit } from "lucide-react";
+import { useRef, useState } from "react";
+import { Share2, BrainCircuit, LayoutTemplate } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShareDialog } from "@/components/editor/share-dialog";
 import { CanvasWrapper } from "@/components/editor/canvas-wrapper";
+import { StarterTemplatesModal } from "@/components/editor/starter-templates-modal";
+import type { CanvasTemplate } from "@/components/editor/starter-templates";
 
 interface WorkspaceShellProps {
   projectId: string;
@@ -15,6 +17,8 @@ interface WorkspaceShellProps {
 export function WorkspaceShell({ projectId, projectName, isOwner }: WorkspaceShellProps) {
   const [aiSidebarOpen, setAiSidebarOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+  const importRef = useRef<((t: CanvasTemplate) => void) | null>(null);
 
   return (
     <div className="flex h-full flex-col">
@@ -23,6 +27,15 @@ export function WorkspaceShell({ projectId, projectName, isOwner }: WorkspaceShe
           {projectName}
         </span>
         <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setTemplatesOpen(true)}
+            className="gap-1.5 text-copy-muted hover:text-copy-primary"
+          >
+            <LayoutTemplate className="h-4 w-4" />
+            Templates
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -51,7 +64,7 @@ export function WorkspaceShell({ projectId, projectName, isOwner }: WorkspaceShe
 
       <div className="relative flex flex-1 overflow-hidden">
         <div className="flex flex-1 overflow-hidden bg-base">
-          <CanvasWrapper roomId={projectId} />
+          <CanvasWrapper roomId={projectId} importRef={importRef} />
         </div>
 
         <aside
@@ -70,6 +83,11 @@ export function WorkspaceShell({ projectId, projectName, isOwner }: WorkspaceShe
         onOpenChange={setShareOpen}
         projectId={projectId}
         isOwner={isOwner}
+      />
+      <StarterTemplatesModal
+        open={templatesOpen}
+        onOpenChange={setTemplatesOpen}
+        onImport={(template) => importRef.current?.(template)}
       />
     </div>
   );
