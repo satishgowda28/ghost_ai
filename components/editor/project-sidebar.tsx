@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { X, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,17 +20,19 @@ interface ProjectSidebarProps {
 
 function ProjectItem({
   project,
+  isActive,
   onRename,
   onDelete,
 }: {
   project: ProjectData;
+  isActive?: boolean;
   onRename?: (project: ProjectData) => void;
   onDelete?: (project: ProjectData) => void;
 }) {
   return (
     <Link
       href={`/editor/${project.id}`}
-      className="flex items-center gap-1 px-2 py-2 mx-2 rounded-xl hover:bg-elevated cursor-pointer"
+      className={`flex items-center gap-1 px-2 py-2 mx-2 rounded-xl hover:bg-elevated cursor-pointer ${isActive ? "bg-elevated" : ""}`}
     >
       <span className="flex-1 text-sm text-copy-primary truncate">
         {project.name}
@@ -71,6 +74,8 @@ export function ProjectSidebar({
   ownedProjects,
   sharedProjects,
 }: ProjectSidebarProps) {
+  const pathname = usePathname();
+
   return (
     <>
       {isOpen && (
@@ -121,6 +126,7 @@ export function ProjectSidebar({
                     <ProjectItem
                       key={project.id}
                       project={project}
+                      isActive={pathname === `/editor/${project.id}`}
                       onRename={onOpenRename}
                       onDelete={onOpenDelete}
                     />
@@ -139,7 +145,11 @@ export function ProjectSidebar({
               ) : (
                 <div className="py-2">
                   {sharedProjects.map((project) => (
-                    <ProjectItem key={project.id} project={project} />
+                    <ProjectItem
+                      key={project.id}
+                      project={project}
+                      isActive={pathname === `/editor/${project.id}`}
+                    />
                   ))}
                 </div>
               )}
