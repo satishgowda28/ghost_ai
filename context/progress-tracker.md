@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Feature 11 complete — Liveblocks-backed React Flow canvas
+- Feature 18 complete — starter template library with modal picker and canvas import
 
 ## Completed
 
@@ -24,13 +24,25 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - **12-shape-panel**: Bottom shape panel with drag-to-canvas. `components/editor/shape-panel.tsx` — floating pill toolbar (absolute, bottom-center) with 6 draggable shape buttons (rectangle 160×80, diamond 140×100, circle 80×80, pill 160×60, cylinder 80×100, hexagon 100×100); drag payload via `application/ghost-shape` data transfer. `components/editor/canvas-node.tsx` — `CanvasNodeRenderer` custom node type: bordered rectangle, centered label, top/bottom handles; used for all shapes (shape-specific visuals deferred). `components/editor/canvas.tsx` — split into `Canvas` (ReactFlowProvider wrapper) + `CanvasInner` (suspense); `nodeTypes = { canvasNode: CanvasNodeRenderer }` registered; `onDragOver` + `onDrop` handlers using `screenToFlowPosition`; new nodes created via `onNodesChange([{ type: "add", item: newNode }])`; node IDs: `${shape}-${Date.now()}-${counter}`. `npm run build` passes.
 
+- **13-node-shape**: Shape-specific node rendering and drag preview. `types/canvas.ts` — added `NODE_COLORS` (8 fill/text pairs from ui-context) and `NODE_SHAPES` / `NodeShape` exports. `components/editor/canvas-node.tsx` — full shape renderer: rectangle/pill/circle use CSS div with border-radius; diamond/hexagon/cylinder render inline SVG scaled to node width×height; all shapes: subtle border at rest, `--accent-primary` border when selected; 4 handles (Top/Bottom/Left/Right) hidden by default, revealed on group hover. `components/editor/shape-panel.tsx` — `createDragPreview` builds off-screen DOM element per shape type (SVG for diamond/hexagon/cylinder, styled div for CSS shapes) and calls `e.dataTransfer.setDragImage`; element cleaned up via `requestAnimationFrame` immediately after. `npm run build` passes.
+
+- **14-node-editing**: Resize and inline label editing for canvas nodes. `components/editor/canvas-node.tsx` — `CanvasNodeRenderer` wraps shape output in `position: relative` container; `NodeResizer` from `@xyflow/react` shown when selected (subtle 8×8 handles with `--accent-primary`, dashed border line), `minWidth: 60 / minHeight: 40`; resize changes propagate through React Flow's `onNodesChange` → Liveblocks sync. Double-click opens inline label editor: textarea overlay with `nodrag nopan` class (prevents canvas drag/pan), `position: absolute; inset: 0` centered via flex; shape receives empty label during edit to prevent double-render; commits via `updateNodeData` on blur or Escape; `editValueRef` avoids stale closure on commit. Placeholder "Label" shown at 0.35 opacity when label is empty and not editing. `npm run build` passes.
+
+- **15-node-color-toolbar**: Floating color toolbar for selected nodes. `components/editor/canvas-node.tsx` — `ColorToolbar` component renders when `selected`; positioned `bottom: calc(100% + 14px)` above the node (14px gap clears the NodeResizer top handles); 8 swatches from `NODE_COLORS`, each 18×18 circular button; active swatch gets `2.5px solid` border in its paired text color; hover shows tight `box-shadow` glow using the text color at 33–55% opacity; all interactions use `nodrag nopan` + `stopPropagation` to block canvas drag/pan; swatch click calls `updateNodeData(id, { ...data, color: fill })` which updates both node background and text color (text derived via `getTextColor` at render time); collaborative state flows through existing `useLiveblocksFlow` path. `npm run build` passes.
+
+- **16-nodes-color-toolbar**: Spec confirmed implemented via Feature 15 work. All requirements satisfied: `NODE_COLORS` 8 fill/text pairs in `types/canvas.ts`; `ColorToolbar` shows only when selected, positioned above node, swatches update both background and text color atomically via `updateNodeData`; hover glow uses paired text color at 33–55% opacity; `nodrag nopan` + `stopPropagation` blocks canvas drag/pan on toolbar interactions; state synced through Liveblocks. `npm run build` passes.
+
+- **17-canvas-ergonomics**: Floating control bar + keyboard shortcuts. `components/editor/canvas.tsx` — `ControlBar` component (pill-shaped, bottom-left) with zoom-out/fit-view/zoom-in and undo/redo groups separated by a thin divider; zoom calls use `flow.zoomIn/zoomOut/fitView({ duration: 200 })`; undo/redo wired to `useUndo`/`useRedo` from `@liveblocks/react`; disabled buttons dimmed via `disabled:opacity-30`. `hooks/useKeyboardShortcuts.ts` — listens on `window` keydown; skips inputs, textareas, contentEditable; `+`/`=` zoom in, `-` zoom out (no modifier), `Cmd/Ctrl+Z` undo, `Cmd/Ctrl+Shift+Z` and `Cmd/Ctrl+Y` redo; `preventDefault` on all matched shortcuts; zoom keys guarded against modifier keys to avoid hijacking browser zoom. `npm run build` passes.
+
+- **18-starter-templates**: Starter template library with modal picker and live canvas import. `components/editor/starter-templates.ts` — `CanvasTemplate` interface + `CANVAS_TEMPLATES` array (3 templates: Microservices, CI/CD Pipeline, Event-Driven) using `NODE_COLORS` palette and shared `CanvasNode`/`CanvasEdge` types. `components/editor/starter-templates-modal.tsx` — Dialog with 3-column card grid; each card has a lightweight SVG preview (bounds-fitted, scale-to-fit, shape-accurate node rendering + edge lines, no React Flow instance), template name + description, and Import button; `onImport` closes modal and triggers canvas replacement. `components/editor/canvas.tsx` — `importRef: MutableRefObject<(t) => void | null>` threaded into `CanvasInner`; ref is set each render to a closure over current `nodes`/`edges`; import removes all existing edges, batches remove-old + add-new nodes in one `onNodesChange` call, then adds template edges, then calls `fitView` via `requestAnimationFrame`. `components/editor/canvas-wrapper.tsx` — passes `importRef` through to `<Canvas>`. `components/editor/workspace-shell.tsx` — `importRef` created here; Templates button in sub-navbar opens modal; `onImport` calls `importRef.current?.(template)`. `npm run build` passes.
+
 ## In Progress
 
 - None.
 
 ## Next Up
 
-- Feature 13: Shape-specific visual rendering.
+- Feature 19: (not yet specced)
 
 ## Open Questions
 

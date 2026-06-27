@@ -1,9 +1,10 @@
 "use client";
 
-import { Component, type ReactNode } from "react";
+import { Component, type ReactNode, type MutableRefObject } from "react";
 import { LiveblocksProvider, RoomProvider, ClientSideSuspense } from "@liveblocks/react";
 import { LiveObject, LiveMap } from "@liveblocks/client";
 import { Canvas } from "./canvas";
+import type { CanvasTemplate } from "./starter-templates";
 
 class ErrorBoundary extends Component<
   { fallback: ReactNode; children: ReactNode },
@@ -20,9 +21,10 @@ class ErrorBoundary extends Component<
 
 interface CanvasWrapperProps {
   roomId: string;
+  importRef: MutableRefObject<((t: CanvasTemplate) => void) | null>;
 }
 
-export function CanvasWrapper({ roomId }: CanvasWrapperProps) {
+export function CanvasWrapper({ roomId, importRef }: CanvasWrapperProps) {
   return (
     <div className="h-full w-full">
     <ErrorBoundary
@@ -62,7 +64,7 @@ export function CanvasWrapper({ roomId }: CanvasWrapperProps) {
               </div>
             }
           >
-            <Canvas />
+            <Canvas importRef={importRef} />
           </ClientSideSuspense>
         </RoomProvider>
       </LiveblocksProvider>
