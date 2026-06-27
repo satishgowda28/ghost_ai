@@ -54,11 +54,15 @@ export function WorkspaceShell({ projectId, projectName, isOwner }: WorkspaceShe
           <CanvasWrapper roomId={projectId} />
         </div>
 
-        {aiSidebarOpen && (
-          <aside className="flex w-80 shrink-0 items-center justify-center border-l border-surface-border bg-surface">
+        <aside
+          className={`shrink-0 overflow-hidden border-l border-surface-border bg-surface transition-[width] duration-300 ease-in-out ${
+            aiSidebarOpen ? "w-80" : "w-0 border-l-0"
+          }`}
+        >
+          <div className="flex h-full w-80 items-center justify-center">
             <p className="text-sm text-copy-faint">AI chat coming soon</p>
-          </aside>
-        )}
+          </div>
+        </aside>
       </div>
 
       <ShareDialog

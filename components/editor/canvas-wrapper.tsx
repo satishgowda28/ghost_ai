@@ -2,6 +2,7 @@
 
 import { Component, type ReactNode } from "react";
 import { LiveblocksProvider, RoomProvider, ClientSideSuspense } from "@liveblocks/react";
+import { LiveObject, LiveMap } from "@liveblocks/client";
 import { Canvas } from "./canvas";
 
 class ErrorBoundary extends Component<
@@ -23,6 +24,7 @@ interface CanvasWrapperProps {
 
 export function CanvasWrapper({ roomId }: CanvasWrapperProps) {
   return (
+    <div className="h-full w-full">
     <ErrorBoundary
       fallback={
         <div className="flex h-full items-center justify-center">
@@ -46,6 +48,12 @@ export function CanvasWrapper({ roomId }: CanvasWrapperProps) {
         <RoomProvider
           id={roomId}
           initialPresence={{ cursor: null, isThinking: false }}
+          initialStorage={() => ({
+            flow: new LiveObject({
+              nodes: new LiveMap(),
+              edges: new LiveMap(),
+            }),
+          })}
         >
           <ClientSideSuspense
             fallback={
@@ -59,5 +67,6 @@ export function CanvasWrapper({ roomId }: CanvasWrapperProps) {
         </RoomProvider>
       </LiveblocksProvider>
     </ErrorBoundary>
+    </div>
   );
 }

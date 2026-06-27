@@ -22,13 +22,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - **11-base-canvas**: Liveblocks-backed React Flow canvas. `types/canvas.ts` — `CanvasNodeData` (label/color/shape), `CanvasNode` (type: "canvasNode"), `CanvasEdge` (type: "canvasEdge"). `components/editor/canvas-wrapper.tsx` — client component; `LiveblocksProvider` with custom `authEndpoint` POST to `/api/liveblocks-auth`; `RoomProvider` with `initialPresence { cursor: null, isThinking: false }`; `ClientSideSuspense` loading fallback; `ErrorBoundary` error fallback. `components/editor/canvas.tsx` — `useLiveblocksFlow<CanvasNode, CanvasEdge>({ suspense: true })`; `ReactFlow` with synced nodes/edges/handlers; `Background` (dots), `MiniMap`, `ConnectionMode.Loose`, `fitView`. `workspace-shell.tsx` — canvas placeholder replaced with `<CanvasWrapper roomId={projectId} />`. `npm run build` passes.
 
+- **12-shape-panel**: Bottom shape panel with drag-to-canvas. `components/editor/shape-panel.tsx` — floating pill toolbar (absolute, bottom-center) with 6 draggable shape buttons (rectangle 160×80, diamond 140×100, circle 80×80, pill 160×60, cylinder 80×100, hexagon 100×100); drag payload via `application/ghost-shape` data transfer. `components/editor/canvas-node.tsx` — `CanvasNodeRenderer` custom node type: bordered rectangle, centered label, top/bottom handles; used for all shapes (shape-specific visuals deferred). `components/editor/canvas.tsx` — split into `Canvas` (ReactFlowProvider wrapper) + `CanvasInner` (suspense); `nodeTypes = { canvasNode: CanvasNodeRenderer }` registered; `onDragOver` + `onDrop` handlers using `screenToFlowPosition`; new nodes created via `onNodesChange([{ type: "add", item: newNode }])`; node IDs: `${shape}-${Date.now()}-${counter}`. `npm run build` passes.
+
 ## In Progress
 
 - None.
 
 ## Next Up
 
-- Feature 12: Custom node and edge rendering.
+- Feature 13: Shape-specific visual rendering.
 
 ## Open Questions
 
